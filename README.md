@@ -6,4 +6,4 @@ URL Shortener is a service that takes a regular URL and transforms it into an en
 
 ## Example
 
-www.lighthouselabs.ca → goo.gl/6alQXu
+www.lighthouselabs.ca → 6alQXu
