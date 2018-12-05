@@ -18,7 +18,12 @@ app.post("/login", (req, res) => {
   let { username } = req.body;
   res.cookie("username", username);
   res.redirect("/urls");
-  //res.render("urls_index", templateVars);
+});
+
+app.post("/logout", (req, res) => {
+  let { username } = req.body;
+  res.clearCookie("username");
+  res.redirect("/urls");
 });
 
 app.post("/urls/:id/delete", (req, res) => {
