@@ -7,8 +7,19 @@
 <header>
     <% include ./partials/_header.ejs %>
 </header>
-    <ul>
-        <li><%= urls[shortURL] %> --> <%= shortURL %></li>
+    <!--<ul>
+        <li><%= urls[shortURL] %> --> <!--<%= shortURL %></li>
 </ul>
+//-->
+
+
+
+<form method="POST" action="/urls/<%= shortURL %>">
+  Short URL: <strong><%= shortURL %></strong><br>
+  <input type="text" name="longURL" size="35" value="<%= urls[shortURL] %>">
+
+  <input type="submit" value="Update">
+</form>
+
 </body>
 </html>
