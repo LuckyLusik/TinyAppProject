@@ -11,9 +11,9 @@
     <ul>
     <% for (shortname in urls) { %>
 <form method="POST" action="/urls/<%= shortname %>/delete">
-        <li><%= urls[shortname] %> --> <%= shortname %>
+        <li><%= shortname %> --> <%= urls[shortname] %>
 
-
+<a href='/urls/<%= shortname %>'>Edit</a>
   <button type="submit">Delete URL</button>
 
 
