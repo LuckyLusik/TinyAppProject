@@ -19,6 +19,15 @@ app.post("/urls/:id/delete", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+app.post("/urls/:id", (req, res) => {
+  let { id } = req.params;
+  let templateVars = { urls: urlDatabase };
+  urlDatabase[id] = req.body.longURL;
+  console.log(req.body.longURL);
+  res.render("urls_index", templateVars);
+  res.redirect("/urls");
+});
+
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
