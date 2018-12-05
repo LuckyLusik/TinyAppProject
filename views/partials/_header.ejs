@@ -1,1 +1,10 @@
-<h1>Header</h1>
+<% if (!username) { %>
+  <form method="POST" action="/login">
+  Please, enter your <strong>username</strong><br>
+  <input type="text" name="username" size="35" value="">
+
+  <input type="submit" value="Login">
+</form>
+<% } else { %>
+  <p><%= username %></p>
+<% } %>
