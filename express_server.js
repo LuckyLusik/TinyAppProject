@@ -12,6 +12,13 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+app.post("/urls/:id/delete", (req, res) => {
+  let { id } = req.params;
+  let templateVars = { urls: urlDatabase };
+  delete urlDatabase[id];
+  res.render("urls_index", templateVars);
+});
+
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
