@@ -7,11 +7,25 @@
 <header>
     <% include ./partials/_header.ejs %>
 </header>
+
     <ul>
     <% for (shortname in urls) { %>
-        <li><%= urls[shortname] %> --> <%= shortname %></li>
+<form method="POST" action="/urls/<%= shortname %>/delete">
+        <li><%= urls[shortname] %> --> <%= shortname %>
+
+
+  <button type="submit">Delete URL</button>
+
+
+        </li>
+</form>
     <% }; %>
+
 </ul>
+
+
+
+
 <a href='#'>A link for shortening a new URL</a>
 </body>
 </html>
