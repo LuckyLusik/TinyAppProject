@@ -1,12 +1,12 @@
-<% if (!username) { %>
+<% if (!userObj) { %>
   <form method="POST" action="/login">
   <p>Please, enter your <strong>username</strong><br></p>
-  <input type="text" name="username" size="35" value="">
+  <input type="text" name="user_id" size="35" value="">
 
   <input type="submit" value="Login" class="button">
 </form>
 <% } else { %>
-  <p><%= username %></p>
+  <p><%= userObj.id %></p>
   <form method="POST" action="/logout">
   <input type="submit" value="Logout" class="button">
   </form>
