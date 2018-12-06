@@ -8,6 +8,10 @@ p {
   margin: 0px 20px;
 }
 
+a {
+  color: #ed6a5a;
+}
+
 .center {
     margin: auto;
     width: 90%;
