@@ -1,0 +1,65 @@
+body {
+    background-color: #e6ebe0;
+    font-family: Verdana;
+}
+
+p {
+  color: #5ca4a9;
+  margin: 0px 20px;
+}
+
+.center {
+    margin: auto;
+    width: 90%;
+    border: 3px solid #5ca4a9;
+    padding: 10px;
+}
+
+.button {
+  background-color: #5ca4a9;
+  padding: 15px 25px;
+  margin: 10px 20px;
+  color: #f4f1bb;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: Verdana;
+  font-weight: bold;
+  border: none;
+  }
+
+.button:hover {
+  background-color: #9bc1bc;
+  transition: background-color 0.5s ease;
+}
+
+.deleteB {
+  background-color: #5ca4a9;
+}
+
+.deleteB:hover {
+  background-color: #ed6a5a;
+  transition: background-color 0.5s ease;
+}
+
+input {
+  padding: 15px 20px;
+  margin: 0px 20px;
+  font-size: 16px;
+  font-family: Verdana;
+}
+
+input:focus {
+  outline: none;
+}
+
+ul {
+   padding: 0;
+}
+
+ul li {
+  margin: 10px 20px;
+  list-style: none;
+}
+
+
+
