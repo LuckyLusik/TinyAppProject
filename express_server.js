@@ -12,9 +12,16 @@ app.use(express.static(__dirname + '/public'));
 console.log(__dirname + '/public');
 
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
+  "b2xVn2": {
+    link: "http://www.lighthouselabs.ca",
+    userID: "userRandomID",
+  },
+
+  "9sm5xK": {
+    link: "http://www.google.com",
+    userID: "user3RandomID",
+  },
+}
 
 const users = {
   "userRandomID": {
@@ -58,7 +65,7 @@ app.post("/login", (req, res) => {
     }
   }
   res.cookie("user_id", userID);
-  res.redirect("/");
+  res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
@@ -85,19 +92,31 @@ app.post("/urls/:id", (req, res) => {
   let templateVars = {
     userObj: userObj,
     urls: urlDatabase };
-  urlDatabase[id] = req.body.longURL;
+  urlDatabase[id].link = req.body.longURL;
   res.render("urls_index", templateVars);
   res.redirect("/urls");
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  let userID = req.cookies["user_id"];
+  let userObj = users[userID];
+  if (!userObj){
+    res.render("login");
+  } else {
+    let templateVars = {
+    userObj: userObj,
+    urls: urlDatabase };
+    res.render("urls_new", templateVars);
+  }
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
   let shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
+  let { longURL } = req.body;
+  let userID = req.cookies["user_id"];
+  urlDatabase[shortURL] = { link: longURL, userID: userID  };
+
+  //urlDatabase[shortURL].link = req.body.longURL;
   res.redirect("/urls/" + shortURL);         // Respond with 'Ok' (we will replace this)
 });
 
