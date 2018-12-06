@@ -34,14 +34,31 @@ const users = {
   },
 }
 
+function emailCheck(email){
+  for (let userID in users) {
+    if (users[userID].email === email){
+      return userID;
+    }
+  }
+  return false;
+}
+
 app.get("/login", (req, res) => {
   res.render("login");
 });
 
 app.post("/login", (req, res) => {
-  let { user_id } = req.body;
-  res.cookie("user_id", user_id);
-  res.redirect("/urls");
+  let { email, password } = req.body;
+  let userID = emailCheck(email);
+  if (!userID) {
+    res.status(403).send('This email is not in our list!');}
+    else {
+      if (users[userID].password !== password) {
+        res.status(403).send('Something wrong with your password...');
+    }
+  }
+  res.cookie("user_id", userID);
+  res.redirect("/");
 });
 
 app.post("/logout", (req, res) => {
@@ -129,19 +146,12 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
-function emailCheck(email){
-  for (let userID in users) {
-    if (users[userID].email === email){
-      return true;
-    }
-  }
-  return false;
-}
+
 
 app.post("/register", (req, res) => {
   let { email, password } = req.body;
   let emailEx = emailCheck(email);
-  if (emailEx) {
+  if (!emailEx) {
     res.status(400).send('This email already exist!');
   }
   if (email && password) {
