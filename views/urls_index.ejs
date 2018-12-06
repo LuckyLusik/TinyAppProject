@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link href="/css/styles.css" rel="stylesheet" type="text/css">
   <title>TinyApp</title>
 </head>
 <body>
+  <div class="center">
 <header>
     <% include ./partials/_header.ejs %>
 </header>
@@ -14,7 +16,7 @@
         <li><%= shortname %> --> <%= urls[shortname] %>
 
 <a href='/urls/<%= shortname %>'>Edit</a>
-  <button type="submit">Delete URL</button>
+  <button type="submit" class="button deleteB">Delete URL</button>
 
 
         </li>
@@ -27,5 +29,6 @@
 
 
 <a href='#'>A link for shortening a new URL</a>
+</div>
 </body>
 </html>
