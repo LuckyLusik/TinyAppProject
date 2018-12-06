@@ -34,6 +34,10 @@ const users = {
   },
 }
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
 app.post("/login", (req, res) => {
   let { user_id } = req.body;
   res.cookie("user_id", user_id);
