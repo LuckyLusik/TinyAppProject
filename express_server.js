@@ -62,7 +62,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  let { username } = req.body;
+  let { user_id } = req.body;
   res.clearCookie("user_id");
   res.redirect("/urls");
 });
@@ -152,19 +152,21 @@ app.post("/register", (req, res) => {
   let { email, password } = req.body;
   let emailEx = emailCheck(email);
   if (!emailEx) {
-    res.status(400).send('This email already exist!');
-  }
-  if (email && password) {
-    let userID = generateRandomString();
-    users[userID] = {
-      id: userID,
-      email: email,
-      password: password,
+    if (email && password) {
+      let userID = generateRandomString();
+      users[userID] = {
+        id: userID,
+        email: email,
+        password: password,
+      }
+      res.cookie("user_id", userID);
+      res.redirect("/urls");
+    } else {
+      res.status(400).send('Please, enter emaile and password!');
     }
-    res.cookie("user_id", userID);
-    res.redirect("/urls");
-  } else {
-    res.status(400).send('Please, enter emaile and password!');
+  }
+   else {
+    res.status(400).send('This email already exist!');
   }
 });
 
