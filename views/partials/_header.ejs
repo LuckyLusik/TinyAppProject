@@ -1,3 +1,6 @@
+<!--
+
+
 <% if (!userObj) { %>
   <form method="POST" action="/login">
   <p>Please, enter your <strong>username</strong><br></p>
@@ -5,9 +8,12 @@
 
   <input type="submit" value="Login" class="button">
 </form>
-<% } else { %>
+<% } else { %>  -->
+
   <p><%= userObj.id %></p>
   <form method="POST" action="/logout">
   <input type="submit" value="Logout" class="button">
   </form>
-<% } %>
+
+
+<!--  <% } %> -->
