@@ -1,13 +1,13 @@
 <% if (!username) { %>
   <form method="POST" action="/login">
-  Please, enter your <strong>username</strong><br>
+  <p>Please, enter your <strong>username</strong><br></p>
   <input type="text" name="username" size="35" value="">
 
-  <input type="submit" value="Login">
+  <input type="submit" value="Login" class="button">
 </form>
 <% } else { %>
   <p><%= username %></p>
   <form method="POST" action="/logout">
-  <input type="submit" value="Logout">
+  <input type="submit" value="Logout" class="button">
   </form>
 <% } %>
