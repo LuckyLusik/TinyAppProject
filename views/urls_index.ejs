@@ -13,7 +13,7 @@
     <ul>
     <% for (shortname in urls) { %>
 <form method="POST" action="/urls/<%= shortname %>/delete">
-        <li><%= shortname %> --> <%= urls[shortname] %>
+        <li><%= shortname %> --> <%= urls[shortname].link %>
 
 <a href='/urls/<%= shortname %>'>Edit</a>
   <button type="submit" class="button deleteB">Delete URL</button>
@@ -28,7 +28,7 @@
 
 
 
-<a href='#'>A link for shortening a new URL</a>
+<p><a href='/urls/new'>A link for shortening a new URL</a></p>
 </div>
 </body>
 </html>
