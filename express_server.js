@@ -116,16 +116,35 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
-app.post("/register", (req, res) => {
-  let userID = generateRandomString();
-  users[userID] = {
-    id: userID,
-    email: req.body.email,
-    password: req.body.password,
+function emailCheck(email){
+  for (let userID in users) {
+    if (users[userID].email === email){
+      return true;
+    }
   }
-  res.cookie("user_id", userID);
-  res.redirect("/urls");
-  console.log(users);
+  return false;
+}
+
+app.post("/register", (req, res) => {
+  let { email, password } = req.body;
+  let emailEx = emailCheck(email);
+  if (emailEx) {
+    res.status(400).send('This email already exist!');
+  }
+  if (email && password) {
+    let userID = generateRandomString();
+    users[userID] = {
+      id: userID,
+      email: email,
+      password: password,
+    }
+    res.cookie("user_id", userID);
+    res.redirect("/urls");
+  } else {
+    res.status(400).send('Please, enter emaile and password!');
+  }
+
+
 });
 
 function generateRandomString() {
