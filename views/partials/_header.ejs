@@ -1,14 +1,17 @@
-<!--
-
-
 <% if (!userObj) { %>
+<p>Please, register <a href='/register'>Register</a>
+or login
+<a href='/login'>Login</a></p>
+
+<!--
   <form method="POST" action="/login">
   <p>Please, enter your <strong>username</strong><br></p>
   <input type="text" name="user_id" size="35" value="">
 
   <input type="submit" value="Login" class="button">
-</form>
-<% } else { %>  -->
+</form> -->
+
+<% } else { %>
 
   <p><%= userObj.id %></p>
   <form method="POST" action="/logout">
@@ -16,4 +19,4 @@
   </form>
 
 
-<!--  <% } %> -->
+<% } %>
