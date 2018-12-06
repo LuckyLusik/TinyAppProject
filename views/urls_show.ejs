@@ -18,7 +18,7 @@
 
 <form method="POST" action="/urls/<%= shortURL %>">
   <p>Short URL: <strong><%= shortURL %></strong><br></p>
-  <input type="text" name="longURL" size="35" value="<%= urls[shortURL] %>">
+  <input type="text" name="longURL" size="35" value="<%= urls[shortURL].link %>">
 
   <input type="submit" value="Update" class="button deleteB">
 </form>
