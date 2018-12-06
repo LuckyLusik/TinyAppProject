@@ -75,26 +75,51 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  let userID = req.cookies["user_id"];
-  let userObj = users[userID];
-  let { id } = req.params;
-  let templateVars = {
+  let userIDC = req.cookies["user_id"];
+  let userObj = users[userIDC];
+  let id2 = req.params.id;
+  if (urlDatabase[id2].userID === userObj.id) {
+    let templateVars = {
     userObj: userObj,
     urls: urlDatabase };
-  delete urlDatabase[id];
-  res.render("urls_index", templateVars);
+    delete urlDatabase[id2];
+    res.render("urls_index", templateVars);
+  } else {
+    res.status(403).send("You are not allowed to delete this record!");
+  }
+
+});
+app.get("/urls/:id", (req, res) => {
+  let userID = req.cookies["user_id"];
+  let userObj = users[userID];
+  let id2 = req.params.id;
+  if (urlDatabase[id2].userID === userObj.id) {
+    let templateVars = {
+    userObj: userObj,
+    shortURL: req.params.id,
+    urls: urlDatabase };
+    res.render("urls_show", templateVars);
+  } else {
+    res.status(403).send("You are not allowed to update this record!");
+  }
 });
 
+
 app.post("/urls/:id", (req, res) => {
-  let userID = req.cookies["user_id"];
-  let userObj = users[userID];
-  let { id } = req.params;
-  let templateVars = {
+  let userIDC = req.cookies["user_id"];
+  let userObj = users[userIDC];
+  let id2 = req.params.id;
+  if (urlDatabase[id2].userID === userObj.id) {
+    let templateVars = {
     userObj: userObj,
     urls: urlDatabase };
-  urlDatabase[id].link = req.body.longURL;
-  res.render("urls_index", templateVars);
-  res.redirect("/urls");
+    urlDatabase[id2].link = req.body.longURL;
+    res.render("urls_index", templateVars);
+    res.redirect("/urls");
+  } else {
+    res.status(403).send("You are not allowed to update this record!");
+  }
+
 });
 
 app.get("/urls/new", (req, res) => {
@@ -151,15 +176,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-app.get("/urls/:id", (req, res) => {
-  let userID = req.cookies["user_id"];
-  let userObj = users[userID];
-  let templateVars = {
-    userObj: userObj,
-    shortURL: req.params.id,
-    urls: urlDatabase };
-  res.render("urls_show", templateVars);
-});
+
 
 app.get("/register", (req, res) => {
   res.render("register");
