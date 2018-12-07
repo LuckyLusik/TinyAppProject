@@ -64,15 +64,20 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let { email, password } = req.body;
   let userID = emailCheck(email);
-  if (!userID) {
-    res.status(403).send('This email is not in our list!');}
-    else {
-      if (users[userID].password !== password) {
-        res.status(403).send('Something wrong with your password...');
+  if (!email && password) {
+    res.status(400).send('Please, enter emaile and password!');
+  } else {
+      if (!userID) {
+      res.status(403).send('This email is not in our list!');}
+      else {
+        if (!bcrypt.compareSync(password, users[userID].password)) {
+          res.status(403).send('Something wrong with your password...');
+      } else {
+          res.cookie("user_id", userID);
+          res.redirect("/urls");
+      }
     }
   }
-  res.cookie("user_id", userID);
-  res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
@@ -212,7 +217,6 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   let { email, password } = req.body;
   let emailEx = emailCheck(email);
-
   if (!emailEx) {
     if (email && password) {
       const hashedPassword = bcrypt.hashSync(password, 10);
