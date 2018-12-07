@@ -21,6 +21,10 @@ var urlDatabase = {
     link: "http://www.google.com",
     userID: "user3RandomID",
   },
+  "9sm566": {
+    link: "http://www.bigmir.com",
+    userID: "user3RandomID",
+  },
 }
 
 const users = {
@@ -89,38 +93,7 @@ app.post("/urls/:id/delete", (req, res) => {
   }
 
 });
-app.get("/urls/:id", (req, res) => {
-  let userID = req.cookies["user_id"];
-  let userObj = users[userID];
-  let id2 = req.params.id;
-  if (urlDatabase[id2].userID === userObj.id) {
-    let templateVars = {
-    userObj: userObj,
-    shortURL: req.params.id,
-    urls: urlDatabase };
-    res.render("urls_show", templateVars);
-  } else {
-    res.status(403).send("You are not allowed to update this record!");
-  }
-});
 
-
-app.post("/urls/:id", (req, res) => {
-  let userIDC = req.cookies["user_id"];
-  let userObj = users[userIDC];
-  let id2 = req.params.id;
-  if (urlDatabase[id2].userID === userObj.id) {
-    let templateVars = {
-    userObj: userObj,
-    urls: urlDatabase };
-    urlDatabase[id2].link = req.body.longURL;
-    res.render("urls_index", templateVars);
-    res.redirect("/urls");
-  } else {
-    res.status(403).send("You are not allowed to update this record!");
-  }
-
-});
 
 app.get("/urls/new", (req, res) => {
   let userID = req.cookies["user_id"];
@@ -135,14 +108,69 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
+app.get("/urls/:id", (req, res) => {
+  let userIDC = req.cookies["user_id"];
+  let userObj = users[userIDC];
+  let id2 = req.params.id;
+  let usURLs = urlsForUser(userIDC);
+  if (urlDatabase[id2].userID === userObj.id) {
+    let templateVars = {
+    userObj: userObj,
+    shortURL: req.params.id,
+    urls: usURLs };
+    res.render("urls_show", templateVars);
+  } else {
+    res.status(403).send("You are not allowed to update this record!");
+  }
+});
+
+
+app.post("/urls/:id", (req, res) => {
+  let userIDC = req.cookies["user_id"];
+  let userObj = users[userIDC];
+  let id2 = req.params.id;
+  let usURLs = urlsForUser(userIDC);
+  if (urlDatabase[id2].userID === userObj.id) {
+    let templateVars = {
+    userObj: userObj,
+    urls: sURLs };
+    urlDatabase[id2].link = req.body.longURL;
+    res.render("urls_index", templateVars);
+    res.redirect("/urls");
+  } else {
+    res.status(403).send("You are not allowed to update this record!");
+  }
+
+});
+
+function urlsForUser(id) {
+  let userURLs = {};
+  for (let varD in urlDatabase) {
+    if (id === urlDatabase[varD].userID) {
+      userURLs[varD] = urlDatabase[varD].link;
+    }
+  }
+  return userURLs;
+}
+
 app.post("/urls", (req, res) => {
   let shortURL = generateRandomString();
   let { longURL } = req.body;
   let userID = req.cookies["user_id"];
   urlDatabase[shortURL] = { link: longURL, userID: userID  };
-
   //urlDatabase[shortURL].link = req.body.longURL;
   res.redirect("/urls/" + shortURL);         // Respond with 'Ok' (we will replace this)
+});
+
+app.get("/urls", (req, res) => {
+  let userID = req.cookies["user_id"];
+  let userObj = users[userID];
+  let usURLs = urlsForUser(userID);
+  let templateVars = {
+    urls: usURLs,
+    userObj: userObj,
+  };
+  res.render("urls_index", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -166,15 +194,7 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-app.get("/urls", (req, res) => {
-  let userID = req.cookies["user_id"];
-  let userObj = users[userID];
-  let templateVars = {
-    urls: urlDatabase,
-    userObj: userObj,
-  };
-  res.render("urls_index", templateVars);
-});
+
 
 
 
