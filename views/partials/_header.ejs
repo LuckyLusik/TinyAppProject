@@ -1,15 +1,6 @@
 <% if (!userObj) { %>
 <p class="marg">Please, <a href='/register'>Register</a>
-or <a href='/login'>Login</a></p>
-
-<!--
-  <form method="POST" action="/login">
-  <p>Please, enter your <strong>username</strong><br></p>
-  <input type="text" name="user_id" size="35" value="">
-
-  <input type="submit" value="Login" class="button">
-</form> -->
-
+or <a href='/login'>Login</a> first</p>
 <% } else { %>
 
   <p><%= userObj.id %></p>
@@ -19,3 +10,12 @@ or <a href='/login'>Login</a></p>
 
 
 <% } %>
+
+
+<!--
+  <form method="POST" action="/login">
+  <p>Please, enter your <strong>username</strong><br></p>
+  <input type="text" name="user_id" size="35" value="">
+
+  <input type="submit" value="Login" class="button">
+</form> -->
