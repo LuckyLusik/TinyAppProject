@@ -9,11 +9,11 @@
 <header>
     <% include ./partials/_header.ejs %>
 </header>
-
-    <ul>
+  <% if (userObj) { %>
+<ul>
     <% for (shortname in urls) { %>
 <form method="POST" action="/urls/<%= shortname %>/delete">
-        <li><%= shortname %> --> <%= urls[shortname].link %>
+        <li><%= shortname %> --> <%= urls[shortname] %>
 
 <a href='/urls/<%= shortname %>'>Edit</a>
   <button type="submit" class="button deleteB">Delete URL</button>
@@ -24,6 +24,9 @@
     <% }; %>
 
 </ul>
+
+<% } %>
+
 
 
 
