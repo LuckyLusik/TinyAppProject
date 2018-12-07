@@ -32,17 +32,17 @@ const users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: bcrypt.hashSync("purple-monkey-dinosaur", 10),
   },
  "user2RandomID": {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "dishwasher-funk"
+    password: bcrypt.hashSync("dishwasher-funk", 10),
   },
   "user3RandomID": {
     id: "user3RandomID",
     email: "user3@example.com",
-    password: "nature"
+    password: bcrypt.hashSync("nature", 10),
   },
 }
 
@@ -99,7 +99,6 @@ app.post("/urls/:id/delete", (req, res) => {
   } else {
     res.status(403).send("You are not allowed to delete this record!");
   }
-
 });
 
 
@@ -227,6 +226,7 @@ app.post("/register", (req, res) => {
         password: hashedPassword,
       }
       res.cookie("user_id", userID);
+      console.log(users[userID]);
       res.redirect("/urls");
     } else {
       res.status(400).send('Please, enter emaile and password!');
