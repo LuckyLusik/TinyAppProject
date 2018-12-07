@@ -55,7 +55,9 @@ function emailCheck(email){
 }
 
 app.get("/login", (req, res) => {
-  res.render("login");
+  let userID = req.cookies["user_id"];
+  let userObj = users[userID];
+  res.render("login", { userObj });
 });
 
 app.post("/login", (req, res) => {
@@ -114,7 +116,7 @@ app.get("/urls/:id", (req, res) => {
   let id2 = req.params.id;
   let usURLs = urlsForUser(userID);
   if (!userObj) {
-    res.render("login");
+    res.redirect("/login");
   } else {
     if (urlDatabase[id2].userID === userObj.id) {
     let templateVars = {
@@ -200,14 +202,11 @@ app.get("/hello", (req, res) => {
 });
 
 
-
-
-
 app.get("/register", (req, res) => {
-  res.render("register");
+  let userID = req.cookies["user_id"];
+  let userObj = users[userID];
+  res.render("register", { userObj });
 });
-
-
 
 app.post("/register", (req, res) => {
   let { email, password } = req.body;
