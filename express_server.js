@@ -109,11 +109,14 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  let userIDC = req.cookies["user_id"];
-  let userObj = users[userIDC];
+  let userID = req.cookies["user_id"];
+  let userObj = users[userID];
   let id2 = req.params.id;
-  let usURLs = urlsForUser(userIDC);
-  if (urlDatabase[id2].userID === userObj.id) {
+  let usURLs = urlsForUser(userID);
+  if (!userObj) {
+    res.render("login");
+  } else {
+    if (urlDatabase[id2].userID === userObj.id) {
     let templateVars = {
     userObj: userObj,
     shortURL: req.params.id,
@@ -122,14 +125,16 @@ app.get("/urls/:id", (req, res) => {
   } else {
     res.status(403).send("You are not allowed to update this record!");
   }
+  }
+
 });
 
 
 app.post("/urls/:id", (req, res) => {
-  let userIDC = req.cookies["user_id"];
-  let userObj = users[userIDC];
+  let userID = req.cookies["user_id"];
+  let userObj = users[userID];
   let id2 = req.params.id;
-  let usURLs = urlsForUser(userIDC);
+  let usURLs = urlsForUser(userID);
   if (urlDatabase[id2].userID === userObj.id) {
     let templateVars = {
     userObj: userObj,
@@ -174,7 +179,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = `/urls/${req.params.shortURL}`;
+  let longURL = urlDatabase[req.params.shortURL].link;
   res.redirect(longURL);
 });
 
