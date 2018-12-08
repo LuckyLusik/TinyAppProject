@@ -1,21 +1,9 @@
 <% if (!userObj) { %>
-<p class="marg">Please, <a href='/register'>Register</a>
-or <a href='/login'>Login</a> first</p>
+    <p class="marg">Please, <a href='/register'>Register</a>
+    or <a href='/login'>Login</a> first</p>
 <% } else { %>
-
-  <p><%= userObj.id %></p>
-  <form method="POST" action="/logout">
-  <input type="submit" value="Logout" class="button">
-  </form>
-
-
+      <p style="font-size:25px;"><strong><%= userObj.email %></strong></p>
+      <form method="POST" action="/logout">
+      <input type="submit" value="Logout" class="button">
+      </form>
 <% } %>
-
-
-<!--
-  <form method="POST" action="/login">
-  <p>Please, enter your <strong>username</strong><br></p>
-  <input type="text" name="user_id" size="35" value="">
-
-  <input type="submit" value="Login" class="button">
-</form> -->
