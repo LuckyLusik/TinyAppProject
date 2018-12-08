@@ -2,15 +2,18 @@
 <html lang="en">
   <head>
     <link href="/css/styles.css" rel="stylesheet" type="text/css">
+    <title>TinyApp. Shortening a new URL</title>
   </head>
   <body>
     <div class="center">
-    <% include partials/_header %>
-    <form action="/urls" method="POST">
-      <p><label for="longURL">Enter a URL:</label></p>
-      <input id="longURL" type="text" name="longURL" placeholder="www.example.com" style="width: 300px">
-      <input type="submit" value="Submit" class="button deleteB">
-    </form>
-  </div>
+      <header>
+        <% include partials/_header %>
+      </header>
+      <form action="/urls" method="POST">
+        <p><label for="longURL">Enter a URL:</label></p>
+        <input id="longURL" type="text" name="longURL" placeholder="www.example.com" style="width: 300px">
+        <input type="submit" value="Submit" class="button deleteB">
+      </form>
+    </div>
   </body>
 </html>
