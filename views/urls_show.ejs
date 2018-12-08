@@ -2,28 +2,21 @@
 <html lang="en">
 <head>
   <link href="/css/styles.css" rel="stylesheet" type="text/css">
-  <title>TinyApp</title>
+  <title>TinyApp. Update a link</title>
 </head>
 <body>
   <div class="center">
-<header>
-    <% include ./partials/_header.ejs %>
-</header>
-    <!--<ul>
-        <li><%= urls[shortURL] %> --> <!--<%= shortURL %></li>
-</ul>
-//-->
-
-
-
-<form method="POST" action="/urls/<%= shortURL %>">
-  <p>Short URL: <strong><%= shortURL %></strong><br></p>
-  <input type="text" name="longURL" size="35" value="<%= urls[shortURL] %>">
-
-  <input type="submit" value="Update" class="button deleteB">
-</form>
-
-
-</div>
+    <header>
+      <% include ./partials/_header.ejs %>
+    </header>
+    <form method="POST" action="/urls/<%= shortURL %>">
+      <p>Short URL: <strong><%= shortURL %></strong><br></p>
+      <input type="text" name="longURL" size="35" value="<%= urls[shortURL] %>">
+      <input type="submit" value="Update" class="button deleteB">
+    </form>
+    <br>
+    <p><a href='/urls/new'>A link for shortening a new URL</a></p><br>
+    <p><a href='/urls'>A link to your URLs</a></p>
+  </div>
 </body>
 </html>
