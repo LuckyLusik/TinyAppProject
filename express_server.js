@@ -1,42 +1,38 @@
 var express = require("express");
-// var cookieParser = require('cookie-parser')
 var cookieSession = require('cookie-session');
 var app = express();
 var PORT = 8080; // default port 8080
 const bcrypt = require('bcrypt');
-
-app.set("view engine", "ejs");
-
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({extended: true}));
-//app.use(cookieParser());
-app.use(express.static(__dirname + '/public'));
 console.log(__dirname + '/public');
 
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static(__dirname + '/public'));
 app.use(cookieSession({
   name: 'session',
   keys: ["TinyAppChernihiv"],
-
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
+//Database of short URLs
 var urlDatabase = {
   "b2xVn2": {
-    link: "http://www.lighthouselabs.ca",
+    link: "www.lighthouselabs.ca",
     userID: "userRandomID",
   },
-
   "9sm5xK": {
-    link: "http://www.google.com",
+    link: "www.google.com",
     userID: "user3RandomID",
   },
   "9sm566": {
-    link: "http://www.bigmir.com",
+    link: "www.twitter.com",
     userID: "user3RandomID",
   },
 }
 
+//Database of users
 const users = {
   "userRandomID": {
     id: "userRandomID",
@@ -55,6 +51,7 @@ const users = {
   },
 }
 
+//Check if email exist
 function emailCheck(email){
   for (let userID in users) {
     if (users[userID].email === email){
@@ -64,16 +61,59 @@ function emailCheck(email){
   return false;
 }
 
+//Check if short URL exist
+function linkCheck(link){
+  for (let short in urlDatabase) {
+    if (short === link){
+      return true;
+    }
+  }
+  return false;
+}
+
+//Create object with links for this user
+function urlsForUser(id) {
+  let userURLs = {};
+  for (let varD in urlDatabase) {
+    if (id === urlDatabase[varD].userID) {
+      userURLs[varD] = urlDatabase[varD].link;
+    }
+  }
+  return userURLs;
+}
+
+//Generate a random string 6 symbols long (letters and numbers)
+function generateRandomString() {
+  let randomStr = "";
+  let numLet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (var i = 0; i < 6; i++) {
+    randomStr += numLet.charAt(Math.floor(Math.random() * numLet.length));
+  }
+  return randomStr;
+}
+
+
+//End points
+
+//Check if user is not logged in and redirect him to login page
 app.get("/login", (req, res) => {
   let userID = req.session.user_id;
   let userObj = users[userID];
-  res.render("login", { userObj });
+  let templateVars = {
+    userObj: userObj,
+  }
+  if (userObj){
+    res.redirect("/urls");
+  } else {
+    res.render("login", templateVars);
+  }
 });
 
+//Check if user entered full info and if user exist
 app.post("/login", (req, res) => {
   let { email, password } = req.body;
   let userID = emailCheck(email);
-  if (!email && password) {
+  if (!email || !password) {
     res.status(400).send('Please, enter emaile and password!');
   } else {
       if (!userID) {
@@ -89,12 +129,14 @@ app.post("/login", (req, res) => {
   }
 });
 
+//Remove cookies when user is loging out
 app.post("/logout", (req, res) => {
   let { user_id } = req.body;
   req.session = null;
   res.redirect("/urls");
 });
 
+//Delete URL from database if this user created it
 app.post("/urls/:id/delete", (req, res) => {
   let userID = req.session.user_id;
   let userObj = users[userID];
@@ -111,7 +153,7 @@ app.post("/urls/:id/delete", (req, res) => {
   }
 });
 
-
+//Shortening a new URL
 app.get("/urls/new", (req, res) => {
   let userID = req.session.user_id;
   let userObj = users[userID];
@@ -125,6 +167,7 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
+//Display all URLs which belong to this user
 app.get("/urls/:id", (req, res) => {
   let userID = req.session.user_id;
   let userObj = users[userID];
@@ -139,14 +182,13 @@ app.get("/urls/:id", (req, res) => {
       shortURL: req.params.id,
       urls: usURLs };
       res.render("urls_show", templateVars);
-  } else {
-    res.status(403).send("You are not allowed to update this record!");
+    } else {
+      res.status(403).send("You are not allowed to update this record!");
+    }
   }
-  }
-
 });
 
-
+//Update long URL
 app.post("/urls/:id", (req, res) => {
   let userID = req.session.user_id;
   let userObj = users[userID];
@@ -157,33 +199,22 @@ app.post("/urls/:id", (req, res) => {
     userObj: userObj,
     urls: usURLs };
     urlDatabase[id2].link = req.body.longURL;
-    //res.render("urls_index", templateVars);
     res.redirect("/urls");
   } else {
     res.status(403).send("You are not allowed to update this record!");
   }
-
 });
 
-function urlsForUser(id) {
-  let userURLs = {};
-  for (let varD in urlDatabase) {
-    if (id === urlDatabase[varD].userID) {
-      userURLs[varD] = urlDatabase[varD].link;
-    }
-  }
-  return userURLs;
-}
-
+//Add a new short URL to database
 app.post("/urls", (req, res) => {
   let shortURL = generateRandomString();
   let { longURL } = req.body;
   let userID = req.session.user_id;
   urlDatabase[shortURL] = { link: longURL, userID: userID  };
-  //urlDatabase[shortURL].link = req.body.longURL;
-  res.redirect("/urls");         // Respond with 'Ok' (we will replace this)
+  res.redirect("/urls/" + shortURL);
 });
 
+//Display all URLs for this user
 app.get("/urls", (req, res) => {
   let userID = req.session.user_id;
   let userObj = users[userID];
@@ -195,34 +226,48 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+//Use a short URL
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL].link;
-  res.redirect(`http://${longURL}`);
+  let shortU = req.params.shortURL;
+  if (linkCheck(shortU)) {
+    let longURL = urlDatabase[req.params.shortURL].link;
+    res.redirect(`http://${longURL}`);
+  } else {
+    res.status(403).send("There is no links for you today...");
+  }
 });
 
+//If user logged in go to list of URLs
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  let userID = req.session.user_id;
+  let userObj = users[userID];
+  if (!userObj) {
+    res.redirect("/login");
+  } else {
+    res.redirect("/urls");
+  }
 });
-
+//Listen for PORT
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
+//Send a JSON response
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-
-
+//Register a new user
 app.get("/register", (req, res) => {
   let userID = req.session.user_id;
   let userObj = users[userID];
-  res.render("register", { userObj });
+  let templateVars = {
+    userObj: userObj,
+  }
+  res.render("register", templateVars);
 });
 
+//Create a new user if he doesn't exist
 app.post("/register", (req, res) => {
   let { email, password } = req.body;
   let emailEx = emailCheck(email);
@@ -236,7 +281,6 @@ app.post("/register", (req, res) => {
         password: hashedPassword,
       }
       req.session.user_id = userID;
-      console.log(users[userID]);
       res.redirect("/urls");
     } else {
       res.status(400).send('Please, enter emaile and password!');
@@ -247,11 +291,3 @@ app.post("/register", (req, res) => {
   }
 });
 
-function generateRandomString() {
-  let randomStr = "";
-  let numLet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for (var i = 0; i < 6; i++) {
-    randomStr += numLet.charAt(Math.floor(Math.random() * numLet.length));
-  }
-  return randomStr;
-}
