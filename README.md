@@ -4,7 +4,7 @@ TinyApp is a full stack web application built with Node and Express. URL Shorten
 
 ## Final Product
 
-First you need to register or log in order to use this TinyApp:
+First you need to register or log in in order to use this TinyApp:
 ![First you need to register or log in in order to use this TinyApp](https://github.com/LuckyLusik/TinyAppProject/blob/master/docs/urls-page.png)
 
 If you have registered - just log in:
