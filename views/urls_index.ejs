@@ -2,36 +2,27 @@
 <html lang="en">
 <head>
   <link href="/css/styles.css" rel="stylesheet" type="text/css">
-  <title>TinyApp</title>
+  <title>TinyApp. Welcome!</title>
 </head>
 <body>
   <div class="center">
-<header>
-    <% include ./partials/_header.ejs %>
-</header>
-  <% if (userObj) { %>
-<ul>
-    <% for (shortname in urls) { %>
-<form method="POST" action="/urls/<%= shortname %>/delete">
-        <li><%= shortname %> --> <%= urls[shortname] %>
-
-<a href='/urls/<%= shortname %>'>Edit</a>
-  <button type="submit" class="button deleteB">Delete URL</button>
-
-
+    <header>
+      <% include ./partials/_header.ejs %>
+    </header>
+      <% if (userObj) { %>
+      <p style="font-size:46px;"><strong>Your Short URLs:</strong></p>
+      <ul>
+        <% for (shortname in urls) { %>
+        <form method="POST" action="/urls/<%= shortname %>/delete">
+        <li><a href='/u/<%= shortname %>'>http://localhost:8080/<%= shortname %></a> --> <%= urls[shortname] %>
+        <a href='/urls/<%= shortname %>'>Edit</a>
+        <button type="submit" class="button deleteB">Delete URL</button>
         </li>
-</form>
-    <% }; %>
-
-</ul>
-
-<% } %>
-
-
-
-
-
-<p><a href='/urls/new'>A link for shortening a new URL</a></p>
-</div>
+        </form>
+        <% }; %>
+      </ul>
+      <% } %>
+      <p style="font-size:30px;"><a href='/urls/new'>A link for shortening a new URL</a></p>
+  </div>
 </body>
 </html>
