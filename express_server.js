@@ -92,6 +92,17 @@ function generateRandomString() {
   return randomStr;
 }
 
+//Register a new user
+function registerUser(emailEntered, passwordEntered) {
+  const hashedPassword = bcrypt.hashSync(passwordEntered, 10);
+  let userID = generateRandomString();
+  users[userID] = {
+    id: userID,
+    email: emailEntered,
+    password: hashedPassword,
+  }
+  return userID;
+}
 
 //End points
 
@@ -114,7 +125,7 @@ app.post("/login", (req, res) => {
   let { email, password } = req.body;
   let userID = emailCheck(email);
   if (!email || !password) {
-    res.status(400).send('Please, enter emaile and password!');
+    res.status(400).send('Please, enter email and password!');
   } else {
       if (!userID) {
       res.status(403).send('This email is not in our list!');}
@@ -131,7 +142,6 @@ app.post("/login", (req, res) => {
 
 //Remove cookies when user is loging out
 app.post("/logout", (req, res) => {
-  let { user_id } = req.body;
   req.session = null;
   res.redirect("/urls");
 });
@@ -195,9 +205,6 @@ app.post("/urls/:id", (req, res) => {
   let id2 = req.params.id;
   let usURLs = urlsForUser(userID);
   if (urlDatabase[id2].userID === userObj.id) {
-    let templateVars = {
-    userObj: userObj,
-    urls: usURLs };
     urlDatabase[id2].link = req.body.longURL;
     res.redirect("/urls");
   } else {
@@ -231,7 +238,11 @@ app.get("/u/:shortURL", (req, res) => {
   let shortU = req.params.shortURL;
   if (linkCheck(shortU)) {
     let longURL = urlDatabase[req.params.shortURL].link;
-    res.redirect(`http://${longURL}`);
+    if (longURL.startsWith('http://') || longURL.startsWith('https://')) {
+      res.redirect(longURL);
+    } else {
+      res.redirect(`http://${longURL}`);
+    }
   } else {
     res.status(403).send("There is no links for you today...");
   }
@@ -273,14 +284,7 @@ app.post("/register", (req, res) => {
   let emailEx = emailCheck(email);
   if (!emailEx) {
     if (email && password) {
-      const hashedPassword = bcrypt.hashSync(password, 10);
-      let userID = generateRandomString();
-      users[userID] = {
-        id: userID,
-        email: email,
-        password: hashedPassword,
-      }
-      req.session.user_id = userID;
+      req.session.user_id = registerUser(email, password);
       res.redirect("/urls");
     } else {
       res.status(400).send('Please, enter emaile and password!');
